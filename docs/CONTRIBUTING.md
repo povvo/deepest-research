@@ -110,7 +110,7 @@ python "$TASKS_SKILL/scripts/cli.py" audit docs/USER_GUIDE.md --format json
 python "$TASKS_SKILL/scripts/cli.py" audit docs/CONTRIBUTING.md --format json
 ```
 
-Set `TASKS_SKILL` to the installed Agent Documentation Skills Tasks directory in your environment. On the campaign host this is the bundled `skills/tasks` directory. Keep generated audit output outside the repository.
+Set `TASKS_SKILL` to the installed Agent Documentation Skills Tasks directory in your environment. Keep generated audit output outside the repository.
 
 ## Add or change a utility
 
