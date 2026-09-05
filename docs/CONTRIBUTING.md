@@ -10,7 +10,7 @@ After reading this guide, a contributor can identify the canonical source for a 
 
 Keep implementation-significant claims tied to the current source or a reproduced observation. Preserve the distinction between a method’s scientific source, a local implementation, a command execution, and a research conclusion. Do not add fabricated citations, benchmark numbers, provider availability, or claims of novelty.
 
-The repository currently has no `LICENSE` file. Do not add a licensing claim to a new document until the owner provides the applicable terms. Keep campaign ledgers, local author paths, and generated reports outside the repository.
+The repository currently has no `LICENSE` file. Do not add a licensing claim to a new document until the owner provides the applicable terms. Keep internal ledgers, local author paths, and generated reports outside the repository.
 
 ## Source map
 
@@ -139,7 +139,7 @@ Do not turn repeated citations, a ranking result, or a deterministic fixture int
 - Preserve `PASS`, `WARN`, `FAIL`, and `NOT RUN` boundaries.
 - Keep unknown host/provider/model behavior conditional.
 - Link to the canonical source instead of duplicating mutable interface details without a reason.
-- Do not publish campaign metadata, local author paths, validation ledgers, or process reports.
+- Do not publish internal metadata, local author paths, validation ledgers, or process reports.
 
 ## Pull request or release checklist
 
