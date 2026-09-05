@@ -1,0 +1,533 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/research-planner/research-plan.schema.json",
+  "title": "Research Planner Protocol",
+  "description": "Machine-readable contract for a decision-ready research plan. Material statements use explicit epistemic status.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "plan_id",
+    "title",
+    "version",
+    "date",
+    "mode",
+    "depth",
+    "research_family",
+    "epistemic_status_key",
+    "plan_snapshot",
+    "decision_scope",
+    "assumptions_unknowns",
+    "research_questions",
+    "conceptual_model",
+    "evidence_strategy",
+    "design_options",
+    "selected_design",
+    "sampling",
+    "measurement_data_collection",
+    "analysis",
+    "validity_boundaries",
+    "ethics_governance",
+    "reproducibility",
+    "feasibility_risks",
+    "roadmap",
+    "unresolved_items",
+    "completion_checks"
+  ],
+  "$defs": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "Verified",
+        "Inference",
+        "Assumption",
+        "Proposal",
+        "Unknown"
+      ]
+    },
+    "statusStatement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "statement"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_locator": {
+          "type": "string"
+        },
+        "reasoning": {
+          "type": "string"
+        },
+        "consequence_if_wrong": {
+          "type": "string"
+        },
+        "verification_step": {
+          "type": "string"
+        }
+      }
+    },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "question",
+        "claim_type",
+        "inferential_target",
+        "evidence_needed",
+        "allowable_conclusion"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_type": {
+          "type": "string",
+          "enum": [
+            "descriptive",
+            "interpretive",
+            "associational",
+            "predictive",
+            "causal",
+            "mechanistic",
+            "evaluative",
+            "constructive",
+            "synthetic",
+            "theoretical"
+          ]
+        },
+        "inferential_target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "population_or_cases": {
+          "type": "string"
+        },
+        "evidence_needed": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowable_conclusion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        }
+      }
+    },
+    "designOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "design",
+        "supported_claim",
+        "strengths",
+        "limitations",
+        "ethics_access",
+        "resources",
+        "score",
+        "disqualifiers"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "design": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supported_claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "strengths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "ethics_access": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resources": {
+          "type": "string",
+          "minLength": 1
+        },
+        "score": {
+          "type": "number"
+        },
+        "disqualifiers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "risk",
+        "category",
+        "likelihood",
+        "impact",
+        "trigger",
+        "mitigation",
+        "owner",
+        "residual_risk"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risk": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        },
+        "likelihood": {
+          "type": "string",
+          "enum": [
+            "Low",
+            "Medium",
+            "High",
+            "Unknown"
+          ]
+        },
+        "impact": {
+          "type": "string",
+          "enum": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical",
+            "Unknown"
+          ]
+        },
+        "trigger": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mitigation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "residual_risk": {
+          "type": "string",
+          "enum": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical",
+            "Unknown"
+          ]
+        }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "status",
+        "inputs",
+        "actions",
+        "owner",
+        "dependencies",
+        "deliverable",
+        "completion_evidence",
+        "gate_rule"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Proposal",
+            "GO",
+            "REVISE",
+            "STOP",
+            "UNKNOWN",
+            "COMPLETE"
+          ]
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deliverable": {
+          "type": "string",
+          "minLength": 1
+        },
+        "completion_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "gate_rule": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "Build",
+        "Refine",
+        "Audit",
+        "Compare",
+        "Protocol"
+      ]
+    },
+    "depth": {
+      "type": "string",
+      "enum": [
+        "Rapid",
+        "Standard",
+        "Protocol"
+      ]
+    },
+    "research_family": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "epistemic_status_key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Verified",
+        "Inference",
+        "Assumption",
+        "Proposal",
+        "Unknown"
+      ],
+      "properties": {
+        "Verified": {
+          "type": "string",
+          "minLength": 1
+        },
+        "Inference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "Assumption": {
+          "type": "string",
+          "minLength": 1
+        },
+        "Proposal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "Unknown": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "plan_snapshot": {
+      "type": "object",
+      "required": [
+        "primary_question",
+        "intended_decision_or_contribution",
+        "primary_design",
+        "target",
+        "critical_constraint",
+        "next_gate"
+      ],
+      "properties": {
+        "primary_question": {
+          "$ref": "#/$defs/statusStatement"
+        },
+        "intended_decision_or_contribution": {
+          "$ref": "#/$defs/statusStatement"
+        },
+        "primary_design": {
+          "$ref": "#/$defs/statusStatement"
+        },
+        "target": {
+          "$ref": "#/$defs/statusStatement"
+        },
+        "critical_constraint": {
+          "$ref": "#/$defs/statusStatement"
+        },
+        "next_gate": {
+          "$ref": "#/$defs/statusStatement"
+        }
+      }
+    },
+    "decision_scope": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "assumptions_unknowns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/statusStatement"
+      }
+    },
+    "research_questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/question"
+      },
+      "minItems": 1
+    },
+    "conceptual_model": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "evidence_strategy": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "design_options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/designOption"
+      },
+      "minItems": 1
+    },
+    "selected_design": {
+      "$ref": "#/$defs/statusStatement"
+    },
+    "sampling": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "measurement_data_collection": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "analysis": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "validity_boundaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "minProperties": 1
+      },
+      "minItems": 1
+    },
+    "ethics_governance": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "reproducibility": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "feasibility_risks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/risk"
+      },
+      "minItems": 1
+    },
+    "roadmap": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/stage"
+      },
+      "minItems": 1
+    },
+    "unresolved_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "minProperties": 1
+      }
+    },
+    "completion_checks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "PASS",
+          "FAIL",
+          "NOT RUN",
+          "UNKNOWN"
+        ]
+      },
+      "minProperties": 1
+    }
+  }
+}

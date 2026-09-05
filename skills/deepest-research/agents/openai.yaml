@@ -1,0 +1,6 @@
+interface:
+  display_name: "Deepest Research"
+  short_description: "Design and execute deep research beyond comprehension."
+  default_prompt: "Use $deepest-research to turn my topic, question, or idea into comprehensive knowledge, insights, and research. Provide detailed explanations, references, and actionable recommendations."
+policy:
+  allow_implicit_invocation: true
