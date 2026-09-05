@@ -1,0 +1,54 @@
+name: Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  local-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Compile Python utilities
+        run: python -m compileall -q skills/deepest-research/scripts
+      - name: Build static repository index
+        run: |
+          mkdir -p "$RUNNER_TEMP/deepest-research"
+          python skills/deepest-research/scripts/repo_parser.py \
+            skills/deepest-research/scripts \
+            --fail-on-parse-error \
+            --output "$RUNNER_TEMP/deepest-research/repository-index.json"
+      - name: Run local smoke fixtures
+        run: |
+          python skills/deepest-research/scripts/context_window.py \
+            --chars 2400 --context-limit 8192 --chunk-chars 1000 \
+            --overlap-chars 100 --output "$RUNNER_TEMP/deepest-research/context.json"
+          python skills/deepest-research/scripts/sample_size.py \
+            --margin 0.05 --confidence 0.95 --proportion 0.5 \
+            --output "$RUNNER_TEMP/deepest-research/sample-size.json"
+          python skills/deepest-research/scripts/intercoder.py \
+            --demo --output "$RUNNER_TEMP/deepest-research/kappa.json"
+      - name: Run pipeline dry-run contract
+        run: |
+          bash skills/deepest-research/scripts/execute-research-pipeline.sh \
+            --output-dir "$RUNNER_TEMP/deepest-research/pipeline" \
+            --repository skills/deepest-research/scripts \
+            --dry-run
+          export REPORT_PATH="$RUNNER_TEMP/deepest-research/pipeline/pipeline_status.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          report = json.loads(Path(os.environ["REPORT_PATH"]).read_text())
+          assert report["status"] == "NOT_RUN"
+          assert report["steps"][0]["status"] == "NOT_RUN"
+          PY
